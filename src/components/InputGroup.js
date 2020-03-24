@@ -12,7 +12,7 @@ export default class InputGroup extends Component {
           <input
             id="command"
             type="text"
-            placeholder="npm ci && npm run build"
+            placeholder={this.props.placeholder}
             class="input input_size_m input_width_full
       input_shape_append-right text
       text_size_13_15"
