@@ -1,18 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Router, Switch, Route, Link } from "react-router-dom";
 import Myswitch from "./route/myswitch";
+import LayoutContainer from "./components/LayoutContainer";
+import Layout from "./components/Layout";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 import "./index.css";
+import { history } from "./utils";
+
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
+    <Router history={history}>
       <div
         className="App page theme theme_color_project-default theme_size_default
     theme_space_default theme_gap_small theme_icon-size_default"
       >
-        <Myswitch />
+        <Layout>
+          <LayoutContainer className={{ size: "s", align: "center" }}>
+            <Header />
+          </LayoutContainer>
+          <Myswitch />
+          <Footer />
+        </Layout>
       </div>
     </Router>
   </React.StrictMode>,

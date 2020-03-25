@@ -1,9 +1,19 @@
 import React, { Component } from "react";
-import { classNames } from "../utils/index";
+import { cn } from "../utils/index";
+import { icons } from "../icons/";
+
 import "./Icon.css";
+
+const className = cn("icon");
 
 export default class Icon extends Component {
   render() {
-    return <div className={classNames(this.props)}>{this.props.children}</div>;
+    return (
+      <div className={className(this.props.className)}>
+        {this.props.type
+          ? icons[this.props.type].render()
+          : icons[this.props.name].render()}
+      </div>
+    );
   }
 }

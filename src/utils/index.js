@@ -1,8 +1,5 @@
-export const classNames = ({ className }) => {
-  const elem = className.elem;
-  const mods = Object.assign({}, className.mods);
+import { withNaming } from "@bem-react/classname";
+import { createBrowserHistory } from "history";
 
-  return `${elem} ${Object.entries(mods)
-    .map(([key, value]) => [elem, key, value].join("_"))
-    .join(" ")}`;
-};
+export const cn = withNaming({ e: "__", m: "_" });
+export const history = createBrowserHistory();

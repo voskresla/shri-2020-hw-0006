@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import InputGroup from "./InputGroup";
 import Button from "./Button";
 
-import api from "./api/schoolciserver";
+import api from "../api/schoolciserver";
 
 import "./Settings.css";
 
@@ -41,53 +41,52 @@ export default class Settings extends Component {
   }
 
   getSettings = async () => {
-    const response = await api.get("/api/settings");
+    const response = await api.get("/settings");
 
     this.setState({ settings: response.data });
   };
 
   render() {
     return (
-      <Layout>
-        <LayoutContainer className={{ size: "s", align: "center" }}>
-          <Header />
-        </LayoutContainer>
-        <LayoutContainer className={{ size: "s", align: "center" }}>
-          <div className="grid grid_m-columns_12 grid_col-gap_full grid grid_s-columns_12">
-            <div className="grid__fraction grid__fraction_m-col_7">
-              <form className="form">
-                <div className="form__title">
-                  <div className="form__header text text_type_h2 text_size_m">
-                    Settings
-                  </div>
-                  <div className="form__subheader text text_size_s text_view_ghost">
-                    Configure repository connection and synchronization
-                    settings.
-                  </div>
+      <LayoutContainer className={{ size: "s", align: "center" }}>
+        <div className="grid grid_m-columns_12 grid_col-gap_full grid grid_s-columns_12">
+          <div className="grid__fraction grid__fraction_m-col_7">
+            <form className="form">
+              <div className="form__title">
+                <div className="form__header text text_type_h2 text_size_m">
+                  Settings
                 </div>
-                <div className="form__items">
-                  {mapSettings(this.state.settings).map(item => (
-                    <div className="form__item form__item_indent-b_xl">
-                      <InputGroup
-                        label={item.label}
-                        placeholder={item.placeholder}
-                        renderAppend={
-                          <Button
-                            className={{ size: "m", distribute: "center" }}
-                            withIcon={true}
-                            withText={false}
-                          />
-                        }
-                      />
-                    </div>
-                  ))}
+                <div className="form__subheader text text_size_s text_view_ghost">
+                  Configure repository connection and synchronization settings.
                 </div>
-              </form>
-            </div>
+              </div>
+              <div className="form__items">
+                {mapSettings(this.state.settings).map(item => (
+                  <div className="form__item form__item_indent-b_xl">
+                    <InputGroup
+                      label={item.label}
+                      placeholder={item.placeholder}
+                      renderAppend={
+                        <Button
+                          className={{ size: "m", distribute: "center" }}
+                          iconName={"inputclose"}
+                        />
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <div class="form__controls">
+                <Button className={{ size: "m", view: "action" }} text="Save" />
+                <Button
+                  className={{ size: "m", view: "control" }}
+                  text="Cancel"
+                />
+              </div>
+            </form>
           </div>
-        </LayoutContainer>
-        <Footer />
-      </Layout>
+        </div>
+      </LayoutContainer>
     );
   }
 }

@@ -27,8 +27,24 @@
 
   line-height: var(--typo-line-height-36);
 }
-
-/* TODO:  возможно стоить переделать на блок icon-content */
-.icon ~ .button__text {
-  margin-left: 24px;
+.icon_view_ghost {
+  color: var(--color-typo-ghost);
+}
+.icon_view_semi-ghost {
+  color: var(--color-typo-semi-ghost);
+}
+.icon_view_semi-dark {
+  color: var(--color-typo-semi-dark);
+}
+.icon_view_dark {
+  color: var(--color-typo-dark);
+}
+.icon_view_success {
+  color: var(--color-typo-success);
+}
+.icon_view_error {
+  color: var(--color-typo-error);
+}
+.icon_view_warning {
+  color: var(--color-typo-warning);
 }

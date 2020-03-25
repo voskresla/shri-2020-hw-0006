@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import Button from "./Button";
+import LinkButton from "./LinkButton";
 import "./Header.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default class Header extends Component {
+  // TODO: получать текст Header из route?
   render() {
     return (
       <div className="header">
@@ -18,48 +20,46 @@ export default class Header extends Component {
               exact
               path="/"
               render={() => (
-                <Link to="/settings">
-                  <Button
+                <LinkButton
+                  className={{
+                    size: "s",
+                    distribute: "center",
+                    view: "control"
+                  }}
+                  text={"Settings"}
+                  iconName={"settings"}
+                  hideMobile={true}
+                  href={"/settings"}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/history"
+              render={() => (
+                <>
+                  <LinkButton
                     className={{
                       size: "s",
                       distribute: "center",
                       view: "control"
                     }}
-                    text={"Settings"}
-                    withIcon={true}
-                    hide={"hide_mobile"}
+                    text={"Run build"}
+                    iconName={"run"}
+                    hideMobile={true}
+                    // TODO: куда ведет кнопка Run build ?
+                    href={""}
                   />
-                </Link>
-              )}
-            />
-            <Route
-              path="/settings"
-              render={() => (
-                <>
-                  <Link to="/">
-                    <Button
-                      className={{
-                        size: "s",
-                        distribute: "center",
-                        view: "control"
-                      }}
-                      text={"Settings"}
-                      withIcon={true}
-                      hide={"hide_mobile"}
-                    />
-                  </Link>
-                  <Link>
-                    <Button
-                      className={{
-                        size: "s",
-                        distribute: "center",
-                        view: "control"
-                      }}
-                      text={"Settings"}
-                      withIcon={true}
-                      hide={"hide_mobile"}
-                    />
-                  </Link>
+                  <LinkButton
+                    className={{
+                      size: "s",
+                      distribute: "center",
+                      view: "control"
+                    }}
+                    iconName={"settings"}
+                    hideMobile={true}
+                    href={"/settings"}
+                  />
                 </>
               )}
             />
