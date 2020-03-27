@@ -15,7 +15,7 @@ export default class Button extends Component {
     return (
       <button
         className={className(this.props.className)}
-        onClick={this.props.onClick}
+        onClick={this.props.handleClick}
       >
         {iconName && <Icon className={{ size: "s" }} name={iconName}></Icon>}
         {text && <div className={`button__text ${hideMobile}`}>{text}</div>}

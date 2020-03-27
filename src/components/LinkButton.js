@@ -6,12 +6,10 @@ import "./Button.css";
 
 export default class LinkButton extends Component {
   handleClick = () => {
-    console.log("sdsdsd");
     history.push(this.props.href);
   };
 
   render() {
-    console.log("asdasd");
-    return <Button {...this.props} onClick={this.handleClick} />;
+    return <Button {...this.props} handleClick={this.handleClick} />;
   }
 }

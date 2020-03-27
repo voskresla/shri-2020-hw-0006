@@ -12,7 +12,7 @@ export default class Header extends Component {
         <div className="header__content header__content_distribute_betwen">
           <div className="header__title">
             <div className="text text_type_h1 text_size_xl text_view_ghost">
-              School CI Server
+              <Link to="/">School CI Server</Link>
             </div>
           </div>
           <div className="header__controls">

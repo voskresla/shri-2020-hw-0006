@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { saveSettings } from "../actions/index";
 import Layout from "./Layout";
 import LayoutContainer from "./LayoutContainer";
 import Header from "./Header";
@@ -10,40 +12,55 @@ import api from "../api/schoolciserver";
 
 import "./Settings.css";
 
-const defaultSettings = {
-  repoName: "default repoName",
-  buildCommand: "default build command",
-  mainBranch: "default main branch",
-  period: 0
-};
-
 const mapSettings = settings =>
   Object.keys(settings).map(key => {
     switch (key) {
       case "repoName":
-        return { label: "Github repository", placeholder: settings[key] };
+        return {
+          id: key,
+          label: "Github repository",
+          placeholder: settings[key]
+        };
       case "buildCommand":
-        return { label: "Build Command", placeholder: settings[key] };
+        return { id: key, label: "Build Command", placeholder: settings[key] };
       case "mainBranch":
-        return { label: "Main Branch", placeholder: settings[key] };
+        return { id: key, label: "Main Branch", placeholder: settings[key] };
       case "period":
-        return { label: "Synchronize every", placeholder: settings[key] };
+        return {
+          id: key,
+          label: "Synchronize every",
+          placeholder: settings[key]
+        };
       default:
         return false;
     }
   });
 
-export default class Settings extends Component {
-  state = { settings: defaultSettings };
+class Settings extends Component {
+  state = {};
 
   componentDidMount() {
-    this.getSettings();
+    // this.props.loadSettings({
+    //   repoName: "default xxx repoName",
+    //   buildCommand: "default xxx build command",
+    //   mainBranch: "default xxx main branch",
+    //   period: 0
+    // });
   }
 
   getSettings = async () => {
     const response = await api.get("/settings");
 
     this.setState({ settings: response.data });
+  };
+
+  handleInputChange = (id, value) => {
+    this.setState({ [id]: value });
+  };
+
+  handleSubmit = e => {
+    // e.preventDefault();
+    this.props.saveSettings(this.state);
   };
 
   render() {
@@ -61,13 +78,17 @@ export default class Settings extends Component {
                 </div>
               </div>
               <div className="form__items">
-                {mapSettings(this.state.settings).map(item => (
+                {mapSettings(this.props.settings).map(item => (
                   <div className="form__item form__item_indent-b_xl">
                     <InputGroup
+                      id={item.id}
+                      inputValue={this.state[item.id]}
+                      handleChange={this.handleInputChange}
                       label={item.label}
                       placeholder={item.placeholder}
                       renderAppend={
                         <Button
+                          handleClick={this.handleSubmit}
                           className={{ size: "m", distribute: "center" }}
                           iconName={"inputclose"}
                         />
@@ -77,7 +98,11 @@ export default class Settings extends Component {
                 ))}
               </div>
               <div class="form__controls">
-                <Button className={{ size: "m", view: "action" }} text="Save" />
+                <Button
+                  className={{ size: "m", view: "action" }}
+                  text="Save"
+                  handleClick={this.handleSubmit}
+                />
                 <Button
                   className={{ size: "m", view: "control" }}
                   text="Cancel"
@@ -90,3 +115,12 @@ export default class Settings extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log(state);
+  return { settings: state.settings };
+};
+
+const mapDispatchToProps = { saveSettings };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
