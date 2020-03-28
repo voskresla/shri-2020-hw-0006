@@ -45,19 +45,34 @@ const mapSettings = settings => {
   return tmp;
 };
 
+const isSettingsCached = settings =>
+  Object.keys(settings).every(key => settings[key] !== "");
+
 class Settings extends Component {
   // значения для inputs беруться из redux
   // потом они синхронизируються с внутренним стейт для контроля
   // потом снова беруться из редакс
-  state = {};
+  state = {
+    repoName: "default repoName",
+    buildCommand: "default build command",
+    mainBranch: "default main branch",
+    period: 0
+  };
 
   componentDidMount() {
-    this.props
-      .getSettingsFromYNDX()
-      // обработка объекта ответа от сервера происходит в actionCreator
-      // потому что я его вызываю и сам ручками и с payload ответа от сервера, а это разные объекты
-      .then(({ data }) => this.props.saveSettings(data))
-      .catch(e => console.error("getSettingsFromYNDX: ", e));
+    console.log(
+      "settingsCached(this.props.settings):",
+      isSettingsCached(this.props.settings)
+    );
+    if (!isSettingsCached(this.props.settings)) {
+      console.log("GO GET SETTINGS");
+      this.props
+        .getSettingsFromYNDX()
+        // обработка объекта ответа от сервера происходит в actionCreator
+        // потому что я его вызываю и сам ручками и с payload ответа от сервера, а это разные объекты
+        .then(({ data }) => this.props.saveSettings(data))
+        .catch(e => console.error("getSettingsFromYNDX: ", e));
+    }
   }
 
   handleInputChange = (id, value) => {

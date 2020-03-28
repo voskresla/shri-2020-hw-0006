@@ -1,9 +1,9 @@
 import * as types from "../actions/";
 const initialSettingsState = {
-  repoName: "default repoName",
-  buildCommand: "default build command",
-  mainBranch: "default main branch",
-  period: 0
+  repoName: "",
+  buildCommand: "",
+  mainBranch: "",
+  period: ""
 };
 
 export default (state = initialSettingsState, action) => {

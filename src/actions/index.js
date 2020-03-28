@@ -21,6 +21,7 @@ export const getSettingsFromYNDX = () => async dispatch => {
   // SUCCESS FETCHING
   try {
     // NOTE: не напиши сюда dispatch:SAVE_SETTINGS, считаю что плохо размазывать, вызови лучше функцию в логике компонента
+    // хотя в доке Redux Reddit они вызывают dispatch внутри dispatch. Может и можно.
     const response = await api.get("/settings");
     dispatch({ type: FETCH_SETTINGS_SUCCESS });
     return Promise.resolve(response);
