@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { saveSettings } from "../actions/index";
+import { saveSettings, getSettingsFromYNDX } from "../actions/index";
 import Layout from "./Layout";
 import LayoutContainer from "./LayoutContainer";
 import Header from "./Header";
@@ -12,54 +12,60 @@ import api from "../api/schoolciserver";
 
 import "./Settings.css";
 
-const mapSettings = settings =>
-  Object.keys(settings).map(key => {
-    switch (key) {
-      case "repoName":
-        return {
-          id: key,
-          label: "Github repository",
-          placeholder: settings[key]
-        };
-      case "buildCommand":
-        return { id: key, label: "Build Command", placeholder: settings[key] };
-      case "mainBranch":
-        return { id: key, label: "Main Branch", placeholder: settings[key] };
-      case "period":
-        return {
-          id: key,
-          label: "Synchronize every",
-          placeholder: settings[key]
-        };
-      default:
-        return false;
-    }
-  });
+const mapSettings = settings => {
+  const tmp = Object.keys(settings)
+    .filter(key => key !== "id")
+    .map(key => {
+      switch (key) {
+        case "repoName":
+          return {
+            id: key,
+            label: "Github repository",
+            placeholder: settings[key]
+          };
+        case "buildCommand":
+          return {
+            id: key,
+            label: "Build Command",
+            placeholder: settings[key]
+          };
+        case "mainBranch":
+          return { id: key, label: "Main Branch", placeholder: settings[key] };
+        case "period":
+          return {
+            id: key,
+            label: "Synchronize every",
+            placeholder: settings[key]
+          };
+        default:
+          break;
+      }
+    });
+  console.log("tmp settings object: ", tmp);
+  return tmp;
+};
 
 class Settings extends Component {
+  // значения для inputs беруться из redux
+  // потом они синхронизируються с внутренним стейт для контроля
+  // потом снова беруться из редакс
   state = {};
 
   componentDidMount() {
-    // this.props.loadSettings({
-    //   repoName: "default xxx repoName",
-    //   buildCommand: "default xxx build command",
-    //   mainBranch: "default xxx main branch",
-    //   period: 0
-    // });
+    this.props
+      .getSettingsFromYNDX()
+      // обработка объекта ответа от сервера происходит в actionCreator
+      // потому что я его вызываю и сам ручками и с payload ответа от сервера, а это разные объекты
+      .then(({ data }) => this.props.saveSettings(data))
+      .catch(e => console.error("getSettingsFromYNDX: ", e));
   }
-
-  getSettings = async () => {
-    const response = await api.get("/settings");
-
-    this.setState({ settings: response.data });
-  };
 
   handleInputChange = (id, value) => {
     this.setState({ [id]: value });
   };
 
   handleSubmit = e => {
-    // e.preventDefault();
+    e.preventDefault();
     this.props.saveSettings(this.state);
   };
 
@@ -117,10 +123,12 @@ class Settings extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return { settings: state.settings };
 };
 
-const mapDispatchToProps = { saveSettings };
+const mapDispatchToProps = {
+  saveSettings,
+  getSettingsFromYNDX
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

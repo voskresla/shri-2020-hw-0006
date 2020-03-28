@@ -1,3 +1,4 @@
+import * as types from "../actions/";
 const initialSettingsState = {
   repoName: "default repoName",
   buildCommand: "default build command",
@@ -6,8 +7,9 @@ const initialSettingsState = {
 };
 
 export default (state = initialSettingsState, action) => {
+  console.log("action.payload from settingsReducer:", action.payload);
   switch (action.type) {
-    case "SAVE_SETTINGS":
+    case types.SAVE_SETTINGS:
       return action.payload;
     default:
       return state;
