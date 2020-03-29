@@ -35,7 +35,7 @@ export default class Header extends Component {
             />
             <Route
               exact
-              path="/history"
+              path="/history/(runbuild)?"
               render={() => (
                 <>
                   <LinkButton
@@ -48,7 +48,36 @@ export default class Header extends Component {
                     iconName={"run"}
                     hideMobile={true}
                     // TODO: куда ведет кнопка Run build ?
-                    href={""}
+                    href={"/history/runbuild"}
+                  />
+                  <LinkButton
+                    className={{
+                      size: "s",
+                      distribute: "center",
+                      view: "control"
+                    }}
+                    iconName={"settings"}
+                    hideMobile={true}
+                    href={"/settings"}
+                  />
+                </>
+              )}
+            />
+            <Route
+              path="/build"
+              render={() => (
+                <>
+                  <LinkButton
+                    className={{
+                      size: "s",
+                      distribute: "center",
+                      view: "control"
+                    }}
+                    // text={"Run build"}
+                    iconName={"rebuild"}
+                    hideMobile={true}
+                    // TODO: куда ведет кнопка Run build ?
+                    // href={"/history/runbuild"}
                   />
                   <LinkButton
                     className={{

@@ -1,7 +1,12 @@
 /* input */
 .input {
-  border: 2px solid var(--color-bg-border);
+  border: 2px solid;
+  border-color: var(--color-bg-border);
   border-radius: 4px;
+}
+
+.input_view_error {
+  border-color: var(--color-bg-invalid);
 }
 
 .input_size_m {

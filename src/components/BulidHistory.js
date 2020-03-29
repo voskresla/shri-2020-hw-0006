@@ -20,10 +20,6 @@ export default class BuildHistory extends Component {
   };
 
   render() {
-    return (
-      <div>
-        <List items={cards(this.state.builds)} />
-      </div>
-    );
+    return <List items={cards(this.state.builds)} />;
   }
 }

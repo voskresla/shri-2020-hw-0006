@@ -9,7 +9,7 @@ import Button from "./Button";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-export default class App extends Component {
+export default class Start extends Component {
   render() {
     return (
       <LayoutContainer className={{ hero: true, size: "s", align: "center" }}>

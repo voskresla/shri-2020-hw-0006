@@ -1,16 +1,26 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { saveSettings, getSettingsFromYNDX } from "../actions/index";
+import {
+  saveSettings,
+  getSettingsFromYNDX,
+  saveSettingsYndx
+} from "../actions/index";
 import Layout from "./Layout";
 import LayoutContainer from "./LayoutContainer";
 import Header from "./Header";
 import Footer from "./Footer";
 import InputGroup from "./InputGroup";
 import Button from "./Button";
-
-import api from "../api/schoolciserver";
+import { history } from "../utils/index";
 
 import "./Settings.css";
+
+const placeholders = {
+  repoName: "default placeholder",
+  buildCommand: "default build command",
+  mainBranch: "default MainBranch",
+  period: "0"
+};
 
 const mapSettings = settings => {
   const tmp = Object.keys(settings)
@@ -21,71 +31,105 @@ const mapSettings = settings => {
           return {
             id: key,
             label: "Github repository",
-            placeholder: settings[key]
+            placeholder: placeholders[key]
           };
         case "buildCommand":
           return {
             id: key,
             label: "Build Command",
-            placeholder: settings[key]
+            placeholder: placeholders[key]
           };
         case "mainBranch":
-          return { id: key, label: "Main Branch", placeholder: settings[key] };
+          return {
+            id: key,
+            label: "Main Branch",
+            placeholder: placeholders[key]
+          };
         case "period":
           return {
             id: key,
             label: "Synchronize every",
-            placeholder: settings[key]
+            placeholder: placeholders[key]
           };
         default:
           break;
       }
     });
-  console.log("tmp settings object: ", tmp);
+
   return tmp;
 };
 
 const isSettingsCached = settings =>
   Object.keys(settings).every(key => settings[key] !== "");
 
+const isEqualSimple = (prev, next) => {
+  return (
+    prev.buildCommand === next.buildCommand ||
+    prev.repoName === next.repoName ||
+    prev.mainBranch === next.mainBranch ||
+    prev.period === next.period
+  );
+};
+
 class Settings extends Component {
   // значения для inputs беруться из redux
   // потом они синхронизируються с внутренним стейт для контроля
   // потом снова беруться из редакс
   state = {
-    repoName: "default repoName",
-    buildCommand: "default build command",
-    mainBranch: "default main branch",
-    period: 0
+    repoName: "",
+    buildCommand: "",
+    mainBranch: "",
+    period: "",
+    isPosting: false,
+    errorText: ""
   };
 
   componentDidMount() {
-    console.log(
-      "settingsCached(this.props.settings):",
-      isSettingsCached(this.props.settings)
-    );
-    if (!isSettingsCached(this.props.settings)) {
-      console.log("GO GET SETTINGS");
-      this.props
-        .getSettingsFromYNDX()
-        // обработка объекта ответа от сервера происходит в actionCreator
-        // потому что я его вызываю и сам ручками и с payload ответа от сервера, а это разные объекты
-        .then(({ data }) => this.props.saveSettings(data))
-        .catch(e => console.error("getSettingsFromYNDX: ", e));
+    this.setState(this.props.settings);
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (!isEqualSimple(prevProps.settings, this.props.settings)) {
+      this.setState(this.props.settings);
     }
   }
 
   handleInputChange = (id, value) => {
-    this.setState({ [id]: value });
+    this.setState({ [id]: value, errorText: "" });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.saveSettings(this.state);
+    if (this.isFormValid()) {
+      this.setState({ isPosting: true });
+      this.props
+        .saveSettingsYndx(this.state)
+        .then(() => {
+          this.setState({ isPosting: false });
+          history.push("/history");
+        })
+        .catch(e => {
+          this.setState({ isPosting: false });
+          this.setState({ errorText: "произошла ошибка клонирования" });
+        });
+    } else {
+      this.setState({ errorText: "заполните обязательные поля" });
+    }
   };
 
+  isFormValid() {
+    return this.state.repoName.length > 0 && this.state.buildCommand.length > 0;
+  }
+
+  isLoaded() {
+    return this.props.settings.repoName.length > 0;
+  }
+
   render() {
-    return (
+    return !this.isLoaded() ? (
+      "LOADED"
+    ) : (
       <LayoutContainer className={{ size: "s", align: "center" }}>
         <div className="grid grid_m-columns_12 grid_col-gap_full grid grid_s-columns_12">
           <div className="grid__fraction grid__fraction_m-col_7">
@@ -102,14 +146,15 @@ class Settings extends Component {
                 {mapSettings(this.props.settings).map(item => (
                   <div className="form__item form__item_indent-b_xl">
                     <InputGroup
+                      valid={!(this.state[item.id] !== "")}
                       id={item.id}
-                      inputValue={this.state[item.id]}
+                      inputValue={this.state[item.id] || ""}
                       handleChange={this.handleInputChange}
                       label={item.label}
                       placeholder={item.placeholder}
                       renderAppend={
                         <Button
-                          handleClick={this.handleSubmit}
+                          // handleClick={this.handleSubmit}
                           className={{ size: "m", distribute: "center" }}
                           iconName={"inputclose"}
                         />
@@ -121,13 +166,19 @@ class Settings extends Component {
               <div class="form__controls">
                 <Button
                   className={{ size: "m", view: "action" }}
-                  text="Save"
+                  text={!this.state.isPosting ? "Save" : "Fetching & Cloning.."}
                   handleClick={this.handleSubmit}
+                  mydisabled={this.state.isPosting}
+                  // iconName={this.state.isPosting ? "spinner" : false}
                 />
                 <Button
                   className={{ size: "m", view: "control" }}
                   text="Cancel"
+                  mydisabled={this.state.isPosting}
                 />
+              </div>
+              <div class="text text_view_ghost text_size_s">
+                {this.state.errorText}
               </div>
             </form>
           </div>
@@ -141,9 +192,11 @@ const mapStateToProps = state => {
   return { settings: state.settings };
 };
 
+// это уезжает в Start
 const mapDispatchToProps = {
   saveSettings,
-  getSettingsFromYNDX
+  getSettingsFromYNDX,
+  saveSettingsYndx
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

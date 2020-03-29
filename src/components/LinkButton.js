@@ -10,6 +10,7 @@ export default class LinkButton extends Component {
   };
 
   render() {
+    // console.log(this.props);
     return <Button {...this.props} handleClick={this.handleClick} />;
   }
 }

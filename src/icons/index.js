@@ -9,6 +9,7 @@ import { ReactComponent as success } from "./success.svg";
 import { ReactComponent as user } from "./user.svg";
 import { ReactComponent as warning } from "./warning.svg";
 import { ReactComponent as inputclose } from "./inputclose.svg";
+import { ReactComponent as spinner } from "./spinner.svg";
 
 export const icons = {
   settings,
@@ -21,5 +22,6 @@ export const icons = {
   success,
   user,
   warning,
-  inputclose
+  inputclose,
+  spinner
 };
