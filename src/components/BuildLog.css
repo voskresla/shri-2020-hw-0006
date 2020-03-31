@@ -30,6 +30,7 @@
   margin: 0;
   padding: var(--space-8) var(--space-12);
 
+  font: monospace;
   font-size: var(--typo-size-10);
   line-height: var(--typo-line-height-20);
 }

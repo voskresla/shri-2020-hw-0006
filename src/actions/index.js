@@ -11,6 +11,9 @@ export const POST_SETTINGS_BEGIN = "POST_SETTINGS_BEGIN";
 export const POST_SETTINGS_SUCCESS = "POST_SETTINGS_SUCCESS";
 export const POST_SETTINGS_ERROR = "POST_SETTINGS_ERROR";
 
+export const SAVE_BUILDS_TO_REDUX = "SAVE_BUILDS_TO_REDUX";
+export const SAVE_CURRENT_BUILD_TO_REDUX = "SAVE_CURRENT_BUILD_TO_REDUX";
+
 export const saveSettings = payload => {
   return {
     type: SAVE_SETTINGS_TO_REDUX,
@@ -55,3 +58,17 @@ export const getSettingsFromYNDX = () => async dispatch => {
     return Promise.reject();
   }
 };
+
+export const saveBuildsToRedux = (payload) => {
+  return {
+    type: SAVE_BUILDS_TO_REDUX,
+    payload: payload
+  }
+}
+
+export const saveCurrentBuildToRedux = (payload) => {
+  return {
+    type: SAVE_CURRENT_BUILD_TO_REDUX,
+    payload: payload
+  }
+}

@@ -38,6 +38,12 @@ export default class RunBuild extends Component {
     return (
       <div className={this.props.match ? "modal" : ""}>
         <div className="modal__container">
+          <div class='text text_type_h1 text_size_m'>
+            New build
+          </div>
+          <div class='text text_type_h2 text_size_s'>
+            Enter the commit hash wich you want to build
+          </div>
           <div class="modal__input">
             <InputGroup
               // valid={!(this.state[item.id] !== "")}
@@ -51,6 +57,7 @@ export default class RunBuild extends Component {
                   // handleClick={this.handleSubmit}
                   className={{ size: "m", distribute: "center" }}
                   iconName={"inputclose"}
+                  
                 />
               }
             />

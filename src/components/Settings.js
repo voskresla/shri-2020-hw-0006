@@ -157,6 +157,7 @@ class Settings extends Component {
                           // handleClick={this.handleSubmit}
                           className={{ size: "m", distribute: "center" }}
                           iconName={"inputclose"}
+                          iconSize={'m'}
                         />
                       }
                     />

@@ -6,11 +6,11 @@ import "./Button.css";
 
 export default class LinkButton extends Component {
   handleClick = () => {
-    history.push(this.props.href);
+    return this.props.clickHandle || history.push(this.props.href);
   };
 
   render() {
-    // console.log(this.props);
-    return <Button {...this.props} handleClick={this.handleClick} />;
+    // console.log('link button:', this.props.onClick);
+    return <Button {...this.props} handleClick={this.props.clickHandle ? this.props.clickHandle : this.handleClick} />;
   }
 }

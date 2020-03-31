@@ -3,10 +3,25 @@ import Button from "./Button";
 import LinkButton from "./LinkButton";
 import "./Header.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import api from "../api/schoolciserver";
+import {connect} from 'react-redux'
+import { history } from "../utils/index";
 
-export default class Header extends Component {
+class Header extends Component {
+
+  handleClick = async e => {
+    console.log('fire from rebuild', this.props.currentBuild)
+    e.preventDefault();
+
+
+    // отправим коммит в билд
+    const { data } = await api.post(`/builds/${this.props.currentBuild.commitHash}`);
+
+    history.push(`/build/${data.data.buildNumber}`);
+  }
   // TODO: получать текст Header из route?
   render() {
+    console.log('header', this.props)
     return (
       <div className="header">
         <div className="header__content header__content_distribute_betwen">
@@ -76,6 +91,7 @@ export default class Header extends Component {
                     // text={"Run build"}
                     iconName={"rebuild"}
                     hideMobile={true}
+                    clickHandle={e => this.handleClick(e)}
                     // TODO: куда ведет кнопка Run build ?
                     // href={"/history/runbuild"}
                   />
@@ -98,3 +114,9 @@ export default class Header extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {currentBuild: state.currentBuild}
+}
+
+export default connect(mapStateToProps)(Header)
